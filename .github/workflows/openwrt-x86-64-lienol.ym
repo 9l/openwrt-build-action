@@ -47,7 +47,7 @@ jobs:
 
       - name: Configuration Customization - OpenWrt-x86_64
         env:
-          CONFIG_FILE: 'x86_64-lp.config'
+          CONFIG_FILE: 'x86_64-lienol.config'
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x ./customize.sh && ./customize.sh
@@ -78,5 +78,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: openwrt-x86_64-lp
+          name: openwrt-x86_64-lienol
           path: openwrt/artifact
