@@ -6,7 +6,7 @@
 # Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
 # <https://github.com/KFERMercer/OpenWrt-CI>
 
-name: OpenWrt-x86_64
+name: OpenWrt-x86_64-lean
 
 on: 
   push:
@@ -47,7 +47,7 @@ jobs:
 
       - name: Configuration Customization - OpenWrt-x86_64
         env:
-          CONFIG_FILE: 'x86_64.config'
+          CONFIG_FILE: 'x86_64-lean.config'
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x ./customize.sh && ./customize.sh
@@ -78,5 +78,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: openwrt-x86_64
+          name: openwrt-x86_64-lean
           path: openwrt/artifact
