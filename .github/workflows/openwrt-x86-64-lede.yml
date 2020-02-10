@@ -45,7 +45,7 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: Configuration Customization - OpenWrt-x86_64-lede
+      - name: Configuration Customization - OpenWrt-x86_64
         env:
           CONFIG_FILE: 'x86_64-lean.config'
         run: |
