@@ -1,0 +1,81 @@
+# This is free software, lisence use MIT.
+# 
+# Copyright (C) 2019 P3TERX <https://p3terx.com>
+# <https://github.com/P3TERX/Actions-OpenWrt>
+#
+# Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
+# <https://github.com/KFERMercer/OpenWrt-CI>
+
+name: OpenWrt-x86_64-raspi4b
+
+on: 
+  push:
+    branches: 
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Initialization environment
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          docker rmi `docker images -q`
+          sudo swapoff /swapfile
+          sudo rm -rf /swapfile
+          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d/* /usr/local/lib/android /opt/ghc
+          sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+          sudo -E apt-get update
+          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libuv-dev patch python3.5 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex node-uglify gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx-ucl libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib
+          sudo -E apt-get -y autoremove --purge
+          sudo -E apt-get clean
+
+      - name: Clone source code
+        env: 
+          REPO_URL: https://github.com/coolsnowwolf/lede
+          REPO_BRANCH: master
+        run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
+
+      - name: Update & Install feeds
+        working-directory: ./openwrt
+        run: |
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
+      - name: Configuration Customization - OpenWrt-x86_64-raspi4b
+        env:
+          CONFIG_FILE: 'x86_64-raspi4b.config'
+        run: |
+          [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+          chmod +x ./customize-raspi4b.sh && ./customize-raspi4b.sh
+          cd openwrt
+          make defconfig
+        
+      - name: Download package
+        working-directory: ./openwrt
+        run: |
+          make download -j$(nproc)
+          find dl -size -1024c -exec rm -f {} \;
+
+      - name: Build firmware
+        working-directory: ./openwrt
+        run: |
+          make -j$(nproc) V=s
+
+      - name: Assemble artifact
+        working-directory: ./openwrt
+        run: |
+          rm -rf ./artifact/
+          mkdir -p ./artifact/
+          find ./bin/targets/ -name "*img*" | xargs -i mv -f {} ./artifact/
+
+      - name : Upload artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: openwrt-x86_64-raspi4b
+          path: openwrt/artifact
