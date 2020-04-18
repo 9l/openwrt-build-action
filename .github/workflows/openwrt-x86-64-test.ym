@@ -49,7 +49,7 @@ jobs:
       - name: Update & Install feeds
         working-directory: ./openwrt
         run: |
-          chmod +x $SHOWSSR_SH && ./$SHOWSSR_SH
+          chmod +x ../$SHOWSSR_SH && ../$SHOWSSR_SH
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
