@@ -19,6 +19,7 @@ env:
   CONFIG_FILE: x86_64-lean.config
   SHOWSSR_SH: showssr.sh
   CUSTOMIZE_SH: customize-test.sh
+  ARTIFACT_NAME: openwrt-x86_64-test
 
 jobs:
   build:
@@ -83,5 +84,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: openwrt-x86_64-test
+          name: $ARTIFACT_NAME
           path: openwrt/artifact
