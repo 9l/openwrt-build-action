@@ -17,7 +17,7 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: x86_64-lean.config
-  SHOWSSR: showssr.sh
+  SHOWSSR_SH: showssr.sh
   CUSTOMIZE_SH: customize-test.sh
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
       - name: Update & Install feeds
         working-directory: ./openwrt
         run: |
-          chmod +x $SHOWSSR && ./$SHOWSSR
+          chmod +x $SHOWSSR_SH && ./$SHOWSSR_SH
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
