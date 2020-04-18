@@ -13,6 +13,14 @@ on:
     branches: 
       - master
 
+env:
+  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_BRANCH: master
+  CONFIG_FILE: x86_64-lean.config
+  SHOWSSR_SH: showssr.sh
+  CUSTOMIZE_SH: customize-test.sh
+  ARTIFACT_NAME: openwrt-x86_64-lede
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,20 +45,16 @@ jobs:
           sudo -E apt-get clean
 
       - name: Clone source code
-        env: 
-          REPO_URL: https://github.com/coolsnowwolf/lede
-          REPO_BRANCH: master
         run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
       - name: Update & Install feeds
         working-directory: ./openwrt
         run: |
+          chmod +x ../$SHOWSSR_SH && ../$SHOWSSR_SH
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
       - name: Configuration Customization - OpenWrt-x86_64
-        env:
-          CONFIG_FILE: 'x86_64-lean.config'
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x ./customize.sh && ./customize.sh
@@ -60,7 +64,7 @@ jobs:
       - name: Download package
         working-directory: ./openwrt
         run: |
-          make download -j$(nproc)
+          make download -j$(nproc) V=s
           find dl -size -1024c -exec rm -f {} \;
 
       - name: Build firmware
@@ -81,5 +85,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: openwrt-x86_64-lede
+          name: $ARTIFACT_NAME
           path: openwrt/artifact
