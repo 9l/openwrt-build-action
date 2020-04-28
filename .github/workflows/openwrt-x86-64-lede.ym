@@ -18,7 +18,7 @@ env:
   REPO_BRANCH: master
   CONFIG_FILE: x86_64-lean.config
   SHOWSSR_SH: showssr.sh
-  CUSTOMIZE_SH: customize-test.sh
+  CUSTOMIZE_SH: customize.sh
 
 jobs:
   build:
