@@ -19,7 +19,6 @@ env:
   CONFIG_FILE: raspi4b.config
   SHOWSSR_SH: showssr.sh
   CUSTOMIZE_SH: customize-test.sh
-  ARTIFACT_NAME: openwrt-raspi4b
 
 jobs:
   build:
@@ -82,5 +81,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: $ARTIFACT_NAME
+          name: openwrt-raspi4b
           path: openwrt/artifact
