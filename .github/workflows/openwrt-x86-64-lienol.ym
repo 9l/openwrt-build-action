@@ -19,7 +19,6 @@ env:
   CONFIG_FILE: x86_64-lean.config
   SHOWSSR_SH: showssr.sh
   CUSTOMIZE_SH: customize-test.sh
-  ARTIFACT_NAME: openwrt-x86_64-lienol
 
 jobs:
   build:
@@ -85,5 +84,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: $ARTIFACT_NAME
+          name: openwrt-x86_64-lienol
           path: openwrt/artifact
