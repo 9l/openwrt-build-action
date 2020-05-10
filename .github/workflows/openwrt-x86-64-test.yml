@@ -10,7 +10,7 @@ name: OpenWrt-x86_64-lean
 
 on: 
   release:
-    types: [unpublished]
+    types: [prereleased]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
