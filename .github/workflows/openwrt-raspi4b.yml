@@ -10,8 +10,7 @@ name: OpenWrt-raspi4b
 
 on: 
   release:
-    types:
-      - published
+    types: [released]
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
