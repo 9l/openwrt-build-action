@@ -6,7 +6,7 @@
 # Copyright (C) 2019 KFERMercer <KFER.Mercer@gmail.com>
 # <https://github.com/KFERMercer/OpenWrt-CI>
 
-name: OpenWrt-raspi4b
+name: OpenWrt-arm-raspi4b
 
 on: 
   release:
@@ -80,5 +80,5 @@ jobs:
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: openwrt-raspi4b
+          name: openwrt-arm-raspi4b
           path: openwrt/artifact
