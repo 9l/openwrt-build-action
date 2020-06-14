@@ -83,7 +83,7 @@ jobs:
           find ./bin/targets/ -name "*qcow*" | xargs -i mv -f {} ./artifact/
 
       - name : Upload artifact
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v2
         with:
           name: openwrt-x86_64-lean
           path: openwrt/artifact
