@@ -17,6 +17,7 @@ env:
   REPO_URL: https://github.com/9l/lede
   REPO_BRANCH: master
   CONFIG_FILE: x86_64-lean.config
+  FEEDS_CONF_DEFAULT: feeds.conf.default
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize.sh
 
@@ -50,7 +51,7 @@ jobs:
       - name: Update & Install feeds
         working-directory: ./openwrt
         run: |
-          chmod +x ../$SHOWSSR_SH && ../$SHOWSSR_SH
+          [ -e ../$FEEDS_CONF_DEFAULT ] cp -rf ../$FEEDS_CONF_DEFAULT .
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
