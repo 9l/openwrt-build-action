@@ -16,8 +16,8 @@ env:
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: x86_64-lean.config
-  SHOWSSR_SH: HELLOWORLD.sh
   FEEDS_CONF_DEFAULT: feeds.conf.default
+  SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-test.sh
 
 jobs:
