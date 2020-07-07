@@ -17,6 +17,7 @@ env:
   REPO_BRANCH: master
   CONFIG_FILE: x86_64-lean.config
   SHOWSSR_SH: HELLOWORLD.sh
+  FEEDS_CONF_DEFAULT: feeds.conf.default
   CUSTOMIZE_SH: customize-test.sh
 
 jobs:
@@ -47,7 +48,7 @@ jobs:
       - name: Update & Install feeds
         working-directory: ./openwrt
         run: |
-          chmod +x ../$SHOWSSR_SH && ../$SHOWSSR_SH
+          [ -e ../$FEEDS_CONF_DEFAULT ] cp -rf ../$FEEDS_CONF_DEFAULT .
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
