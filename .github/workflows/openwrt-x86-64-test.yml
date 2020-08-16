@@ -42,6 +42,8 @@ jobs:
           sudo -E apt-get clean
           df -h
           free -h
+          cat /etc/fstab
+          ls -al /
 
       - name: Clone source code
         run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
