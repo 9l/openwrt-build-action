@@ -33,8 +33,9 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           docker rmi `docker images -q`
-          sudo rm -rf /swapfile /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d/* /usr/local/lib/android /opt/ghc
-          sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* mysql* php*
+          sudo swapoff /mnt/swapfile
+          sudo rm -rf /mnt/swapfile /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d/* /usr/local/lib/android /opt/ghc
+          sudo -E apt-get -y purge azure-cli dotnet* firefox ghc* google* hhvm llvm* mysql* openjdk* php* powershell texlive* zulu*
           sudo -E apt-get update
           sudo -E apt-get -y dist-upgrade
           sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libuv1-dev patch python2.7 python3.6 unzip zlib1g-dev lib32gcc1 libc6-dev libc6-dev-i386 subversion flex node-uglify gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx-ucl libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib linux-libc-dev
@@ -42,9 +43,6 @@ jobs:
           sudo -E apt-get clean
           df -h
           free -h
-          cat /etc/fstab
-          ls -al /
-          swapon -s
 
       - name: Clone source code
         run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
