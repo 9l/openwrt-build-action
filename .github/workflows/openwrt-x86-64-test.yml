@@ -44,6 +44,7 @@ jobs:
           free -h
           cat /etc/fstab
           ls -al /
+          swapon -s
 
       - name: Clone source code
         run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
