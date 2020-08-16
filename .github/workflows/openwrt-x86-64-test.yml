@@ -9,10 +9,11 @@
 name: OpenWrt-x86_64-test
 
 on: 
-  release:
-    types: [prereleased]
+  push:
+    branches: master
 
 env:
+  BUILD_NAME: OpenWrt-x86_64-test
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: x86_64-lean.config
@@ -51,7 +52,7 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: Configuration Customization - OpenWrt-x86_64
+      - name: Configuration Customization - ${{ env.BUILD_NAME }}
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           chmod +x $CUSTOMIZE_SH && ./$CUSTOMIZE_SH
@@ -74,13 +75,14 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
+          ls -al ./bin/targets
           find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*vmdk*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*qcow*" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*iso*" | xargs -i mv -f {} ./artifact/
 
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
-          name: openwrt-x86_64-test
+          name: ${{ env.BUILD_NAME }}
           path: openwrt/artifact
