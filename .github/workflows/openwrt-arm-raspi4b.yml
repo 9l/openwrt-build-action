@@ -9,8 +9,8 @@
 name: OpenWrt-arm-raspi4b
 
 on: 
-  release:
-    types: [released, edited]
+  push:
+    tags: R20.*.*-raspi4b
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
