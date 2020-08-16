@@ -9,8 +9,8 @@
 name: OpenWrt-x86_64-lede
 
 on: 
-  release:
-    types: [released, edited]
+  push:
+    tags: R20.*.*-lede
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
