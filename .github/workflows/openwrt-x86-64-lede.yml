@@ -14,10 +14,8 @@
 name: OpenWrt-x86_64-lede
 
 on: 
-  #schedule:
-  #  - cron: 0 3 * * 1
   push:
-    tags: R20.*.*-test
+    tags: R20.*.*-lede
 
 env:
   BUILD_NAME: OpenWrt-x86_64-lede
@@ -105,11 +103,13 @@ jobs:
           name: ${{ env.BUILD_NAME }}
           path: ${{ env.BUILD_NAME }}
       
-      - name: show artifact folder
+      - name: Create artifact list
         run: |
           ls -al ${{ env.BUILD_NAME }}
           cd ${{ env.BUILD_NAME }}
           pwd
+          ls > ../artifact_list.txt
+          cat ../artifact_list.txt
 
       - name: Create release
         id: create_release
@@ -123,7 +123,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload OpenWrt generic ISO file
+      - name: Upload release asset - OpenWrt generic ISO file
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
         env:
