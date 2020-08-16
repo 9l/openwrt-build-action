@@ -16,7 +16,7 @@ env:
   BUILD_NAME: OpenWrt-x86_64-test
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: x86_64-lean.config
+  CONFIG_FILE: x86_64-lede.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-test.sh
 
