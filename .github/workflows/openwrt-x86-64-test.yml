@@ -65,7 +65,7 @@ jobs:
           chmod +x $CUSTOMIZE_SH && ./$CUSTOMIZE_SH
           cd openwrt
           make defconfig
-        
+
       - name: Download package
         working-directory: ./openwrt
         run: |
