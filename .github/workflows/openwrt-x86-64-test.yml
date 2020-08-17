@@ -89,8 +89,29 @@ jobs:
           find ./bin/targets/ -name "*.vdi" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.vmdk" | xargs -i mv -f {} ./artifact/
 
-      - name : Upload artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
           name: ${{ env.BUILD_NAME }}
           path: openwrt/artifact
+
+      - name: Generate artifact list
+        run: |
+          ls -al openwrt/artifact/
+          cd openwrt/artifact/
+          pwd
+          ls > ./openwrt/artifact/artifact_list.txt
+          cat ./openwrt/artifact/artifact_list.txt
+
+      - name: Upload release asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -x
+          assets=()
+          for asset in ./openwrt/artifact/artifact_list.txt; do
+            assets+=("-a" "$asset")
+          done
+          tag_name="${GITHUB_REF##*/}"
+          # hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
+          hub release edit "${assets[@]}" -m "" "$tag_name"
