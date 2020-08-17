@@ -97,10 +97,7 @@ jobs:
 
       - name: Generate artifact list
         run: |
-          ls -al openwrt/artifact/
-          cd openwrt/artifact/
-          pwd
-          ls > ./openwrt/artifact/artifact_list.txt
+          ls ./openwrt/artifact > ./openwrt/artifact/artifact_list.txt
           cat ./openwrt/artifact/artifact_list.txt
 
       - name: Upload release asset
