@@ -82,7 +82,6 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          ls -alR ./bin/targets
           find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.iso" | xargs -i mv -f {} ./artifact/
@@ -95,11 +94,6 @@ jobs:
           name: ${{ env.BUILD_NAME }}
           path: openwrt/artifact
 
-      - name: Generate artifact list
-        run: |
-          ls ./openwrt/artifact > ./openwrt/artifact/artifact_list.txt
-          cat ./openwrt/artifact/artifact_list.txt
-
       - name: Upload release asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,5 +104,5 @@ jobs:
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
-          # hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
-          hub release edit "${assets[@]}" -m "" "$tag_name"
+          hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
+          # hub release edit "${assets[@]}" -m "" "$tag_name"
