@@ -106,7 +106,7 @@ jobs:
         run: |
           set -x
           assets=()
-          for asset in ./openwrt/artifact/artifact_list.txt; do
+          for asset in ./openwrt/artifact/*; do
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
