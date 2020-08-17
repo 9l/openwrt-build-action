@@ -86,7 +86,7 @@ jobs:
           find ./bin/targets/ -name "*.vdi" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.vmdk" | xargs -i mv -f {} ./artifact/
 
-      - name : Upload artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
           name: ${{ env.BUILD_NAME }}
@@ -103,7 +103,7 @@ jobs:
           name: ${{ env.BUILD_NAME }}
           path: ${{ env.BUILD_NAME }}
       
-      - name: Create artifact list
+      - name: Generate artifact list
         run: |
           ls -al ${{ env.BUILD_NAME }}
           cd ${{ env.BUILD_NAME }}
@@ -119,7 +119,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: OpenWrt ${{ github.ref }}
-          body: OpenWrt ${{ github.ref/## }}
+          body: OpenWrt ${GITHUB_REF##*/}
           draft: false
           prerelease: false
 
