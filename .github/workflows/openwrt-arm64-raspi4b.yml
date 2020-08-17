@@ -13,9 +13,7 @@
 
 name: OpenWrt-arm64-raspi4b
 
-on: 
-  #schedule:
-  #  - cron: 0 3 * * 1
+on:
   push:
     tags: R20.*.*-raspi4b
 
