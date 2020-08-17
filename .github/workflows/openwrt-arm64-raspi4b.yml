@@ -77,12 +77,7 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          ls -alR ./bin/targets
-          find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.iso" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.vdi" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.vmdk" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*squashfs*.img.*" | xargs -i mv -f {} ./artifact/
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
