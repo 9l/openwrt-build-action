@@ -24,6 +24,7 @@ env:
   CONFIG_FILE: arm64-raspi4b.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-raspi4b.sh
+  ENABLE_AUTOCORE: non-x86_64_enable_autocore.diff
 
 jobs:
   build:
@@ -60,8 +61,10 @@ jobs:
       - name: Configuration Customization - ${{ env.BUILD_NAME }}
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
+          [ -e $ENABLE_AUTOCORE ] && mv $ENABLE_AUTOCORE openwrt/
           chmod +x $CUSTOMIZE_SH && ./$CUSTOMIZE_SH
           cd openwrt
+          git apply $ENABLE_AUTOCORE
           make defconfig
 
       - name: Download package
