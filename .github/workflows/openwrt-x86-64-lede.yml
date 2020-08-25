@@ -82,7 +82,6 @@ jobs:
           mkdir -p ./artifact/
           find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.iso" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.vdi" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.vmdk" | xargs -i mv -f {} ./artifact/
 
