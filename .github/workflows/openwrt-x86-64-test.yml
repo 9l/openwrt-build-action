@@ -1,6 +1,6 @@
 #
 # This is free software, lisence use MIT.
-# 
+#
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # <https://github.com/P3TERX/Actions-OpenWrt>
 #
@@ -13,11 +13,11 @@
 
 name: OpenWrt-x86_64-test
 
-on: 
+on:
   #schedule:
   #  - cron: 0 3 * * 1
   push:
-    tags: R20.*.*-test
+    tags: R21.*.*-test
 
 env:
   BUILD_NAME: OpenWrt-x86_64-test

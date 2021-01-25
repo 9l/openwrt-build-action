@@ -1,6 +1,6 @@
 #
 # This is free software, lisence use MIT.
-# 
+#
 # Copyright (C) 2019 P3TERX <https://p3terx.com>
 # <https://github.com/P3TERX/Actions-OpenWrt>
 #
@@ -13,9 +13,9 @@
 
 name: OpenWrt-x86_64-lede
 
-on: 
+on:
   push:
-    tags: R20.*.*-lede
+    tags: R21.*.*-lede
 
 env:
   BUILD_NAME: OpenWrt-x86_64-lede
