@@ -11,17 +11,17 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-arm64-r4s
+name: OpenWrt-arm64-r4s-1gb
 
 on:
   push:
-    tags: R21.*.*-r4s
+    tags: R21.*.*-r4s-1gb
 
 env:
-  BUILD_NAME: OpenWrt-arm64-r4s
+  BUILD_NAME: OpenWrt-arm64-r4s-1gb
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: arm64-r4s.config
+  CONFIG_FILE: arm64-r4s-1gb.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-r4s.sh
 
@@ -80,6 +80,7 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
+          find ./bin/targets/ -name "*ext4*.img.*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*squashfs*.img.*" | xargs -i mv -f {} ./artifact/
           
       - name: Upload artifact
