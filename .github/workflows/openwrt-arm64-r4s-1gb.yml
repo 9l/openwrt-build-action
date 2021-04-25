@@ -11,17 +11,17 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-arm64-r4s-1gb
+name: OpenWrt-arm64-r4s
 
 on:
   push:
-    tags: R21.*.*-r4s-1gb
+    tags: R21.*.*-r4s
 
 env:
-  BUILD_NAME: OpenWrt-arm64-r4s-1gb
+  BUILD_NAME: OpenWrt-arm64-r4s
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: arm64-r4s-1gb.config
+  CONFIG_FILE: arm64-r4s.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-r4s.sh
 
