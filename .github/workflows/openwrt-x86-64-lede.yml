@@ -53,14 +53,14 @@ jobs:
       - name: Update & Install feeds
         working-directory: ./openwrt
         run: |
-          chmod +x ../$SHOWSSR_SH && ../$SHOWSSR_SH
+          sh ../$SHOWSSR_SH
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
       - name: Configuration Customization - ${{ env.BUILD_NAME }}
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-          chmod +x $CUSTOMIZE_SH && ./$CUSTOMIZE_SH
+          sh ./$CUSTOMIZE_SH
           cd openwrt
           make defconfig
 
@@ -80,10 +80,14 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
+          find ./bin/targets/ -name "*rootfs*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.vdi" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.vmdk" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*.qcom2" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*.iso" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*ext4*" | xargs -i mv -f {} ./artifact/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
