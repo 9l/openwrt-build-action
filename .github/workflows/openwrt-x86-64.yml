@@ -11,20 +11,20 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-x86_64-lede
+name: OpenWrt-x86_64
 
 on:
   push:
-    tags: R21.*.*-lede
+    tags: R21.*.*-x86_64
 
 env:
-  BUILD_NAME: OpenWrt-x86_64-lede
+  BUILD_NAME: OpenWrt-x86_64
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: x86_64-lede.config
+  CONFIG_FILE: x86_64.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize.sh
-  ARCH: x86-64
+  ARCH: x86-64-generic
 
 jobs:
   build:
@@ -105,13 +105,13 @@ jobs:
 
       - name: Prepair Dockerfile
         run: |
-          ARCH="${{ env.ARCH }}"
-          sed -i 's/%%ARCH%%/$ARCH/g' Dockerfile
+          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
+          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
 
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-          path: ./artifact
+          path: ./
 
       - name: Create release and upload asset
         env:
@@ -119,7 +119,7 @@ jobs:
         run: |
           set -x
           assets=()
-          for asset in ./artifact/*; do
+          for asset in ./${{ env.BUILD_NAME }}/*; do
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
