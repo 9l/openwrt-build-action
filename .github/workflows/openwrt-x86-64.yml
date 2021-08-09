@@ -103,11 +103,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Prepair Dockerfile
-        run: |
-          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
-          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
-
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
@@ -132,8 +127,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Prepair Dockerfile
+        run: |
+          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
+          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
+
       - name: Build and push to Github Container Registry
         uses: docker/build-push-action@v2
         with:
+          context: .
           push: true
           tags: ghcr.io/${{ github.repository }}/openwrt:latest
