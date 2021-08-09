@@ -132,5 +132,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          platforms: linux/arm64/v8
           push: true
           tags: ghcr.io/${{ github.repository }}/openwrt:latest
