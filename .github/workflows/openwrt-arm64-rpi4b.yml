@@ -11,19 +11,19 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-arm64-raspi4b
+name: OpenWrt-arm64-rpi4b
 
 on:
   push:
-    tags: R21.*.*-raspi4b
+    tags: R21.*.*-rpi4b
 
 env:
-  BUILD_NAME: OpenWrt-arm64-raspi4b
+  BUILD_NAME: OpenWrt-arm64-rpi4b
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
-  CONFIG_FILE: arm64-raspi4b.config
+  CONFIG_FILE: arm64-rpi4b.config
   SHOWSSR_SH: HELLOWORLD.sh
-  CUSTOMIZE_SH: customize-raspi4b.sh
+  CUSTOMIZE_SH: customize-rpi4b.sh
 
 jobs:
   build:
@@ -80,7 +80,7 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find ./bin/targets/ -name "*rootfs*" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*rootfs.tar.gz" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*ext4*.img.*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*squashfs*.img.*" | xargs -i mv -f {} ./artifact/
 
