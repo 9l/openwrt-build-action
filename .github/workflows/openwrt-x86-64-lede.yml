@@ -24,6 +24,7 @@ env:
   CONFIG_FILE: x86_64-lede.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize.sh
+  ARCH: x86-64
 
 jobs:
   build:
@@ -80,14 +81,13 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find ./bin/targets/ -name "*rootfs*" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*rootfs.tar.gz" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*combined*img*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*efi*img*" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.vdi" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.vmdk" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*.qcom2" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*.vdi*" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*.vmdk*" | xargs -i mv -f {} ./artifact/
+          find ./bin/targets/ -name "*.qcom2*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*.iso" | xargs -i mv -f {} ./artifact/
-          find ./bin/targets/ -name "*ext4*" | xargs -i mv -f {} ./artifact/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
@@ -95,14 +95,45 @@ jobs:
           name: ${{ env.BUILD_NAME }}
           path: openwrt/artifact
 
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Prepair Dockerfile
+        run: |
+          ARCH="${{ env.ARCH }}"
+          sed -i 's/%%ARCH%%/$ARCH/g' Dockerfile
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: ./artifact
+
       - name: Create release and upload asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
           assets=()
-          for asset in ./openwrt/artifact/*; do
+          for asset in ./artifact/*; do
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
           hub release create "${assets[@]}" -m "${{ env.BUILD_NAME }} $tag_name" "$tag_name"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push to Github Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/${{ github.repository }}/openwrt:latest
