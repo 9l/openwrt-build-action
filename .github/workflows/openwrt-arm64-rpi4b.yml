@@ -24,6 +24,7 @@ env:
   CONFIG_FILE: arm64-rpi4b.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-rpi4b.sh
+  ARCH: bcm27xx-bcm2711-rpi-4
 
 jobs:
   build:
@@ -90,14 +91,46 @@ jobs:
           name: ${{ env.BUILD_NAME }}
           path: openwrt/artifact
 
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: ./
+
       - name: Create release and upload asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
           assets=()
-          for asset in ./openwrt/artifact/*; do
+          for asset in ./${{ env.BUILD_NAME }}/*; do
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
           hub release create "${assets[@]}" -m "${{ env.BUILD_NAME }} $tag_name" "$tag_name"
+
+      - name: Prepair Dockerfile
+        run: |
+          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
+          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push to Github Container Registry
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository }}/openwrt:latest
