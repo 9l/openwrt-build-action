@@ -67,4 +67,23 @@ docker ps
 docker exec -it ladder ash
 nano /etc/config/network
 /etc/init.d/network restart
+exit
+```
+
+关闭容器
+
+```bash
+docker stop ladder
+```
+
+删除容器
+
+```bash
+docker rm ladder
+```
+
+删除镜像
+
+```bash
+docker rmi ghcr.io/9l/openwrt-build-action/openwrt:latest
 ```
