@@ -11,20 +11,21 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-arm64-rpi4b
+name: openwrt-arm64-rpi4b
 
 on:
   push:
     tags: R21.*.*-rpi4b
 
 env:
-  BUILD_NAME: OpenWrt-arm64-rpi4b
+  BUILD_NAME: openwrt-arm64-rpi4b
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: arm64-rpi4b.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-rpi4b.sh
   ARCH: bcm27xx-bcm2711-rpi-4
+  DOCKER_TAG: rpi4b
 
 jobs:
   build:
@@ -110,19 +111,19 @@ jobs:
         run: |
           set -x
           assets=()
-          for asset in ./${{ env.BUILD_NAME }}/*; do
+          for asset in ./$BUILD_NAME/*; do
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
-          hub release create "${assets[@]}" -m "${{ env.BUILD_NAME }} $tag_name" "$tag_name"
+          hub release create "${assets[@]}" -m "$BUILD_NAME ${tag_name%%-*}" "$tag_name"
 
       - name: Prepair Dockerfile
         run: |
-          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
-          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
+          sed -i 's/%%ARTIFACT_PATH%%/$BUILD_NAME/g' Dockerfile
+          sed -i 's/%%ARCH%%/$env.ARCH/g' Dockerfile
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v1GITHUB_REF
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -134,4 +135,4 @@ jobs:
           context: .
           platforms: linux/arm64/v8
           push: true
-          tags: ghcr.io/${{ github.repository }}/openwrt:latest
+          tags: ghcr.io/${{ github.repository }}/openwrt:${{ env.DOCKER_TAG }}
