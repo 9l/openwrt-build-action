@@ -11,20 +11,21 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-x86_64
+name: openwrt-x86_64
 
 on:
   push:
     tags: R21.*.*-x86_64
 
 env:
-  BUILD_NAME: OpenWrt-x86_64
+  BUILD_NAME: openwrt-x86_64
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: x86_64.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize.sh
   ARCH: x86-64-generic
+  DOCKER_TAG: x86-64
 
 jobs:
   build:
@@ -114,16 +115,16 @@ jobs:
         run: |
           set -x
           assets=()
-          for asset in ./${{ env.BUILD_NAME }}/*; do
+          for asset in ./$BUILD_NAME/*; do
             assets+=("-a" "$asset")
           done
-          tag_name="${GITHUB_REF##*/}"
-          hub release create "${assets[@]}" -m "${{ env.BUILD_NAME }} $tag_name" "$tag_name"
+          tag_name=${GITHUB_REF##*/}
+          hub release create "${assets[@]}" -m "$BUILD_NAME ${tag_name%%-*}" "$tag_name"
 
       - name: Prepair Dockerfile
         run: |
-          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
-          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
+          sed -i 's/%%ARTIFACT_PATH%%/$BUILD_NAME/g' Dockerfile
+          sed -i 's/%%ARCH%%/$ARCH/g' Dockerfile
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1
@@ -138,4 +139,4 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository }}/openwrt:latest
+          tags: ghcr.io/${{ github.repository }}/openwrt:${{ env.DOCKER_TAG }}
