@@ -114,13 +114,13 @@ jobs:
           for asset in ./$BUILD_NAME/*; do
             assets+=("-a" "$asset")
           done
-          tag_name="${GITHUB_REF##*/}"
+          tag_name=${GITHUB_REF##*/}
           hub release create "${assets[@]}" -m "$BUILD_NAME ${tag_name%%-*}" "$tag_name"
 
       - name: Prepair Dockerfile
         run: |
           sed -i 's/%%ARTIFACT_PATH%%/$BUILD_NAME/g' Dockerfile
-          sed -i 's/%%ARCH%%/$env.ARCH/g' Dockerfile
+          sed -i 's/%%ARCH%%/$ARCH/g' Dockerfile
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v1GITHUB_REF
