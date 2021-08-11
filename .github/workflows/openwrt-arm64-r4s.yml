@@ -11,14 +11,14 @@
 # <https://github.com/9l/openwrt-build-action>
 #
 
-name: OpenWrt-arm64-r4s
+name: openwrt-arm64-r4s
 
 on:
   push:
     tags: R21.*.*-r4s
 
 env:
-  BUILD_NAME: OpenWrt-arm64-r4s
+  BUILD_NAME: openwrt-arm64-r4s
   REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
   CONFIG_FILE: arm64-r4s.config
@@ -46,7 +46,7 @@ jobs:
           sudo -E apt-get -y install antlr3 asciidoc binutils build-essential bzip2 curl gawk gettext git libncurses5-dev libuv1-dev patch python2.7 python3.6 unzip zlib1g-dev lib32gcc1 libc6-dev libc6-dev-i386 subversion flex node-uglify gcc-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx-ucl libelf-dev autoconf automake libtool autopoint device-tree-compiler g++-multilib linux-libc-dev swig wget
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
-          
+
       - name: Clone source code
         run: git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
 
@@ -56,25 +56,25 @@ jobs:
           sh ../$SHOWSSR_SH
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-          
+
       - name: Configuration Customization - ${{ env.BUILD_NAME }}
         run: |
           [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
           sh ./$CUSTOMIZE_SH
           cd openwrt
           make defconfig
-          
+
       - name: Download package
         working-directory: ./openwrt
         run: |
           make download -j$(nproc) V=s
           find dl -size -1024c -exec rm -f {} \;
-          
+
       - name: Build firmware
         working-directory: ./openwrt
         run: |
           make -j$(nproc) V=s
-          
+
       - name: Assemble artifact
         working-directory: ./openwrt
         run: |
@@ -82,12 +82,25 @@ jobs:
           mkdir -p ./artifact/
           find ./bin/targets/ -name "*ext4*.img.*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*squashfs*.img.*" | xargs -i mv -f {} ./artifact/
-          
+
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.BUILD_NAME }}
           path: openwrt/artifact
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          path: ./
 
       - name: Create release and upload asset
         env:
@@ -95,8 +108,8 @@ jobs:
         run: |
           set -x
           assets=()
-          for asset in ./openwrt/artifact/*; do
+          for asset in ./$BUILD_NAME/*; do
             assets+=("-a" "$asset")
           done
           tag_name="${GITHUB_REF##*/}"
-          hub release create "${assets[@]}" -m "${{ env.BUILD_NAME }} $tag_name" "$tag_name"
+          hub release create "${assets[@]}" -m "$BUILD_NAME ${tag_name%%-*}" "$tag_name"
