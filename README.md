@@ -37,8 +37,16 @@ docker network list
 
 拉取 OpenWrt Docker 镜像
 
+> x86_64
+
 ```bash
-docker pull ghcr.io/9l/openwrt-build-action/openwrt:latest
+docker pull ghcr.io/9l/openwrt-build-action/openwrt:x86_64
+```
+
+> 树梅派4B
+
+```bash
+docker pull ghcr.io/9l/openwrt-build-action/openwrt:rpi4b
 ```
 
 查看已拉取的 Docker 镜像
@@ -52,7 +60,7 @@ docker images
 ```bash
 docker run -d --restart always --privileged \
   --network Network_Name --ip=192.168.1.88 \
-  --name ladder ghcr.io/9l/openwrt-build-action/openwrt:latest /sbin/init
+  --name ladder ghcr.io/9l/openwrt-build-action/openwrt:x86_64 /sbin/init
 ```
 
 查看正在运行的容器
@@ -85,5 +93,6 @@ docker rm ladder
 删除镜像
 
 ```bash
-docker rmi ghcr.io/9l/openwrt-build-action/openwrt:latest
+docker rmi ghcr.io/9l/openwrt-build-action/openwrt:x86_64
+docker rmi ghcr.io/9l/openwrt-build-action/openwrt:rpi4b
 ```
