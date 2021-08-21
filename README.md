@@ -20,6 +20,11 @@ ip a
 ipconfig
 ```
 
+> 在 Linux 下打开网卡的混杂模式，比如上一步查询到网卡的名称是 `eth1`
+
+```bash
+ip link set eth1 promisc on
+```
 创建 macvlan 网络，IP 地址按照自己的网络来设置
 
 ```bash
