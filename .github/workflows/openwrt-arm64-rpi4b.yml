@@ -26,7 +26,7 @@ env:
   CUSTOMIZE_SH: customize-rpi4b.sh
   ARCH: bcm27xx-bcm2711-rpi-4
   DOCKER_TAG: rpi4b
-  DOCKER_PLATFORMS: linux/arm64/v7
+  DOCKER_PLATFORMS: linux/arm/v7
 
 jobs:
   build:
