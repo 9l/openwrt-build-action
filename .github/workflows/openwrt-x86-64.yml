@@ -26,6 +26,7 @@ env:
   CUSTOMIZE_SH: customize.sh
   ARCH: x86-64-generic
   DOCKER_TAG: x86-64
+  DOCKER_PLATFORMS: linux/amd64
 
 jobs:
   build:
@@ -137,6 +138,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64
+          platforms: ${{ env.DOCKER_PLATFORMS }}
           push: true
           tags: ghcr.io/${{ github.repository }}/openwrt:${{ env.DOCKER_TAG }}
