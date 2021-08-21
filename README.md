@@ -28,7 +28,7 @@ ip link set eth1 promisc on
 创建 macvlan 网络，IP 地址按照自己的网络来设置
 
 ```bash
-docker network creat -d macvlan -o parent=eth0 Network_Name \
+docker network create -d macvlan -o parent=eth0 Network_Name \
   --subnet=192.168.1.0/24 \
   --ip-range=192.168.1.80/28 \
   --gateway=192.168.1.1
