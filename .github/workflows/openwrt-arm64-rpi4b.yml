@@ -134,6 +134,5 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: ${{ env.DOCKER_PLATFORMS }}
           push: true
           tags: ghcr.io/${{ github.repository }}/openwrt:${{ env.DOCKER_TAG }}
