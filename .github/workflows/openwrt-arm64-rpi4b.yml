@@ -80,7 +80,6 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          find ./bin/targets/ -name "*rootfs.tar.gz" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*ext4*.img.*" | xargs -i mv -f {} ./artifact/
           find ./bin/targets/ -name "*squashfs*.img.*" | xargs -i mv -f {} ./artifact/
 
