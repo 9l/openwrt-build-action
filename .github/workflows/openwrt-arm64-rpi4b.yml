@@ -24,9 +24,6 @@ env:
   CONFIG_FILE: arm64-rpi4b.config
   SHOWSSR_SH: HELLOWORLD.sh
   CUSTOMIZE_SH: customize-rpi4b.sh
-  ARCH: bcm27xx-bcm2711-rpi-4
-  DOCKER_TAG: rpi4b
-  DOCKER_PLATFORMS: linux/arm/v7
 
 jobs:
   build:
@@ -117,22 +114,3 @@ jobs:
           done
           tag_name=${GITHUB_REF##*/}
           hub release create "${assets[@]}" -m "$BUILD_NAME ${tag_name%%-*}" "$tag_name"
-
-      - name: Prepair Dockerfile
-        run: |
-          sed -i 's/%%ARTIFACT_PATH%%/${{ env.BUILD_NAME }}/g' Dockerfile
-          sed -i 's/%%ARCH%%/${{ env.ARCH }}/g' Dockerfile
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push to Github Container Registry
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/${{ github.repository }}/openwrt:${{ env.DOCKER_TAG }}

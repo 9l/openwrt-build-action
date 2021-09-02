@@ -48,12 +48,6 @@ docker network list
 docker pull ghcr.io/9l/openwrt-build-action/openwrt:x86_64
 ```
 
-> 树梅派4B
-
-```bash
-docker pull ghcr.io/9l/openwrt-build-action/openwrt:rpi4b
-```
-
 查看已拉取的 Docker 镜像
 
 ```bash
