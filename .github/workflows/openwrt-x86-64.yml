@@ -28,7 +28,7 @@ env:
   DOCKER_TAG: x86-64
   DOCKER_PLATFORMS: linux/amd64
   PUSH_TO_DOCKER: false
-  PUSH_TO_GITHUB: false
+  PUSH_TO_GITHUB: true
 
 jobs:
   build:
