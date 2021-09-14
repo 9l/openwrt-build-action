@@ -15,7 +15,7 @@ name: openwrt-arm64-r4s
 
 on:
   push:
-    tags: R21.*.*-r4s
+    tags: R*-r4s
 
 env:
   BUILD_NAME: openwrt-arm64-r4s

@@ -15,7 +15,7 @@ name: openwrt-arm64-rpi4b
 
 on:
   push:
-    tags: R21.*.*-rpi4b
+    tags: R*-rpi4b
 
 env:
   BUILD_NAME: openwrt-arm64-rpi4b
